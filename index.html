@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBA AI Companion — AI-Powered Ground Control Station</title>
+    <meta name="description" content="The intelligent ground control station for modern drone operations. AI Co-Pilot, Object Tracking, Swarm Control, Voice Commands.">
+    <meta property="og:title" content="BBA AI Companion">
+    <meta property="og:description" content="AI-Powered Ground Control Station for drones. Download for Windows & Linux.">
+    <meta property="og:type" content="website">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e17;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        a { color: #ffd700; text-decoration: none; }
+        a:hover { opacity: 0.85; }
+
+        /* ── Navbar ── */
+        .navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(10,14,23,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #21262d;
+            padding: 0 32px;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 56px;
+        }
+        .nav-brand {
+            display: flex; align-items: center; gap: 10px;
+            font-weight: 700; font-size: 1.1rem; color: #ffd700;
+        }
+        .nav-brand span { color: #8b949e; font-weight: 400; font-size: 0.85rem; }
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+        .nav-links a { color: #c9d1d9; font-size: 0.9rem; font-weight: 500; }
+        .nav-links a:hover { color: #ffd700; }
+        .lang-toggle {
+            background: rgba(255,215,0,0.12); color: #ffd700;
+            border: 1px solid rgba(255,215,0,0.3); border-radius: 6px;
+            padding: 4px 12px; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer;
+        }
+        .lang-toggle:hover { background: rgba(255,215,0,0.2); }
+
+        /* ── Hero ── */
+        .hero {
+            background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 50%, #0d1117 100%);
+            border-bottom: 2px solid #ffd700;
+            padding: 80px 40px 60px;
+            text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ""; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(ellipse at center, rgba(255,215,0,0.04) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,215,0,0.12); color: #ffd700;
+            font-size: 0.75rem; font-weight: 600;
+            padding: 5px 16px; border-radius: 20px;
+            letter-spacing: 1.5px; margin-bottom: 20px; text-transform: uppercase;
+        }
+        .hero h1 { font-size: 3rem; color: #ffd700; letter-spacing: 3px; margin-bottom: 12px; }
+        .hero .tagline { font-size: 1.3rem; color: #c9d1d9; font-weight: 300; margin-bottom: 8px; }
+        .hero .sub-tagline { font-size: 0.95rem; color: #8b949e; margin-bottom: 32px; }
+        .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-block; padding: 14px 32px; border-radius: 10px;
+            font-weight: 700; font-size: 1rem; cursor: pointer; border: none;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .btn-primary { background: #ffd700; color: #0a0e17; }
+        .btn-outline { background: transparent; color: #ffd700; border: 2px solid #ffd700; }
+
+        /* ── Container ── */
+        .container { max-width: 1100px; margin: 0 auto; padding: 60px 24px; }
+        .section-title { text-align: center; font-size: 1.8rem; color: #fff; margin-bottom: 8px; }
+        .section-desc {
+            text-align: center; color: #8b949e; margin-bottom: 40px;
+            font-size: 0.95rem; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.6;
+        }
+
+        /* ── Features Grid ── */
+        .features-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 20px; margin-bottom: 60px;
+        }
+        .feature-card {
+            background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+            border: 1px solid #30363d; border-radius: 14px;
+            padding: 28px 22px; transition: transform 0.2s, border-color 0.2s;
+        }
+        .feature-card:hover { transform: translateY(-3px); border-color: #ffd700; }
+        .feature-card .icon { font-size: 2rem; margin-bottom: 14px; }
+        .feature-card h4 { color: #fff; font-size: 1.05rem; margin-bottom: 8px; }
+        .feature-card p { color: #8b949e; font-size: 0.85rem; line-height: 1.5; }
+        .tag {
+            display: inline-block; margin-top: 12px;
+            background: rgba(255,215,0,0.1); color: #ffd700;
+            font-size: 0.7rem; font-weight: 600; padding: 3px 10px;
+            border-radius: 10px; letter-spacing: 0.5px;
+        }
+        .tag-blue { background: rgba(88,166,255,0.12); color: #58a6ff; }
+        .tag-green { background: rgba(63,185,80,0.12); color: #3fb950; }
+
+        /* ── Copilot Section ── */
+        .copilot-section {
+            background: linear-gradient(135deg, #161b22 0%, #1a1f2e 50%, #161b22 100%);
+            border: 1px solid #ffd700; border-radius: 16px;
+            padding: 36px; margin-bottom: 60px; position: relative; overflow: hidden;
+        }
+        .copilot-section::before {
+            content: ""; position: absolute; top: 0; right: 0;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(255,215,0,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .copilot-section h3 { color: #ffd700; font-size: 1.3rem; margin-bottom: 16px; }
+        .copilot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .copilot-item { display: flex; align-items: flex-start; gap: 12px; }
+        .copilot-item .bullet { color: #ffd700; font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+        .copilot-item .text { color: #c9d1d9; font-size: 0.9rem; line-height: 1.5; }
+        .copilot-item .text strong { color: #fff; }
+
+        /* ── Comparison ── */
+        .comparison table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 60px; }
+        .comparison th {
+            background: #161b22; color: #ffd700; padding: 14px 16px;
+            text-align: left; border-bottom: 2px solid #ffd700; font-weight: 600;
+        }
+        .comparison th:not(:first-child) { text-align: center; }
+        .comparison td { padding: 12px 16px; border-bottom: 1px solid #21262d; color: #c9d1d9; }
+        .comparison td:not(:first-child) { text-align: center; }
+        .comparison tr:hover td { background: rgba(255,215,0,0.03); }
+        .check { color: #3fb950; font-weight: bold; }
+        .cross { color: #f85149; }
+        .partial { color: #d29922; }
+
+        /* ── Pricing ── */
+        .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 60px; }
+        .price-card {
+            background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+            border: 1px solid #30363d; border-radius: 16px;
+            padding: 32px 24px; text-align: center; position: relative;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .price-card:hover { transform: translateY(-3px); border-color: #ffd700; }
+        .price-card.featured { border-color: #ffd700; }
+        .price-card.featured::before {
+            content: attr(data-badge); position: absolute; top: -12px; left: 50%;
+            transform: translateX(-50%);
+            background: #ffd700; color: #0a0e17;
+            font-size: 0.7rem; font-weight: 700;
+            padding: 4px 14px; border-radius: 10px; text-transform: uppercase;
+        }
+        .price-card h4 { color: #fff; font-size: 1.2rem; margin-bottom: 6px; }
+        .price-card .price { font-size: 2.5rem; color: #ffd700; font-weight: 700; margin: 12px 0 4px; }
+        .price-card .price span { font-size: 0.9rem; color: #8b949e; font-weight: 400; }
+        .price-card .desc { color: #8b949e; font-size: 0.85rem; margin-bottom: 20px; }
+        .price-card ul { list-style: none; text-align: left; margin-bottom: 24px; }
+        .price-card li {
+            padding: 6px 0; font-size: 0.85rem; color: #c9d1d9;
+            border-bottom: 1px solid #21262d;
+        }
+        .price-card li::before { content: "\2713 "; color: #3fb950; font-weight: bold; margin-right: 6px; }
+
+        /* ── Downloads ── */
+        .download-section {
+            background: linear-gradient(135deg, #1a1f2e 0%, #161b22 100%);
+            border: 1px solid #30363d; border-radius: 16px;
+            padding: 40px; margin-bottom: 60px;
+        }
+        .download-section h3 { color: #ffd700; font-size: 1.4rem; margin-bottom: 8px; }
+        .download-section .version-tag {
+            display: inline-block; background: rgba(63,185,80,0.15); color: #3fb950;
+            font-size: 0.8rem; font-weight: 600; padding: 3px 12px; border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .download-buttons { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+        .dl-btn {
+            display: flex; align-items: center; gap: 10px;
+            background: #161b22; border: 1px solid #30363d; border-radius: 12px;
+            padding: 16px 24px; color: #c9d1d9; font-size: 0.9rem;
+            transition: border-color 0.2s, transform 0.2s; cursor: pointer;
+        }
+        .dl-btn:hover { border-color: #ffd700; transform: translateY(-2px); color: #fff; }
+        .dl-btn .dl-icon { font-size: 1.5rem; }
+        .dl-btn .dl-info { text-align: left; }
+        .dl-btn .dl-info strong { display: block; color: #fff; font-size: 1rem; }
+        .dl-btn .dl-info span { font-size: 0.78rem; color: #8b949e; }
+        .install-steps { color: #8b949e; font-size: 0.85rem; line-height: 1.6; }
+        .install-steps code {
+            background: rgba(255,215,0,0.08); color: #ffd700;
+            padding: 2px 6px; border-radius: 4px; font-size: 0.82rem;
+        }
+
+        /* ── Use Cases ── */
+        .usecases { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 60px; }
+        .usecase {
+            background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+            border: 1px solid #30363d; border-radius: 12px;
+            padding: 22px 16px; text-align: center;
+        }
+        .usecase .icon { font-size: 1.8rem; margin-bottom: 10px; }
+        .usecase h5 { color: #fff; font-size: 0.9rem; margin-bottom: 6px; }
+        .usecase p { color: #8b949e; font-size: 0.78rem; line-height: 1.4; }
+
+        /* ── Compat Banner ── */
+        .compat-banner {
+            background: linear-gradient(135deg, #1a1f2e 0%, #161b22 100%);
+            border: 1px solid #30363d; border-radius: 12px;
+            padding: 24px 32px; margin-bottom: 60px;
+            display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+        }
+        .compat-banner h4 { color: #fff; font-size: 1rem; margin-bottom: 4px; }
+        .compat-banner p { color: #8b949e; font-size: 0.85rem; }
+        .compat-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto; }
+        .compat-tag {
+            background: rgba(88,166,255,0.1); color: #58a6ff;
+            font-size: 0.78rem; font-weight: 600;
+            padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(88,166,255,0.2);
+        }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center; padding: 40px 20px;
+            border-top: 1px solid #21262d;
+        }
+        .footer h3 { color: #fff; font-size: 1.3rem; margin-bottom: 8px; }
+        .footer p { color: #8b949e; font-size: 0.92rem; margin-bottom: 16px; }
+        .footer .email-btn {
+            display: inline-block; background: #ffd700; color: #0a0e17;
+            font-weight: 700; font-size: 1rem;
+            padding: 12px 32px; border-radius: 10px;
+        }
+        .footer .small { margin-top: 16px; color: #484f58; font-size: 0.8rem; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .navbar { padding: 0 16px; }
+            .nav-links { gap: 12px; }
+            .nav-links a { font-size: 0.8rem; }
+            .hero h1 { font-size: 2rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .copilot-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .usecases { grid-template-columns: 1fr 1fr; }
+            .compat-banner { flex-direction: column; }
+            .compat-tags { margin-left: 0; }
+            .download-buttons { flex-direction: column; }
+        }
+
+        /* ── Lang toggle: hide/show ── */
+        [data-lang-en] { display: inline; }
+        [data-lang-tr] { display: none; }
+        body.lang-tr [data-lang-en] { display: none; }
+        body.lang-tr [data-lang-tr] { display: inline; }
+        /* block variants */
+        div[data-lang-en], p[data-lang-en], li[data-lang-en], h1[data-lang-en],
+        h2[data-lang-en], h3[data-lang-en], h4[data-lang-en], h5[data-lang-en],
+        span[data-lang-en], strong[data-lang-en], td[data-lang-en], th[data-lang-en] { display: inline; }
+        div[data-lang-tr], p[data-lang-tr], li[data-lang-tr], h1[data-lang-tr],
+        h2[data-lang-tr], h3[data-lang-tr], h4[data-lang-tr], h5[data-lang-tr],
+        span[data-lang-tr], strong[data-lang-tr], td[data-lang-tr], th[data-lang-tr] { display: none; }
+        body.lang-tr div[data-lang-en], body.lang-tr p[data-lang-en], body.lang-tr li[data-lang-en],
+        body.lang-tr h1[data-lang-en], body.lang-tr h2[data-lang-en], body.lang-tr h3[data-lang-en],
+        body.lang-tr h4[data-lang-en], body.lang-tr h5[data-lang-en], body.lang-tr span[data-lang-en],
+        body.lang-tr strong[data-lang-en], body.lang-tr td[data-lang-en], body.lang-tr th[data-lang-en] { display: none; }
+        body.lang-tr div[data-lang-tr], body.lang-tr p[data-lang-tr], body.lang-tr li[data-lang-tr],
+        body.lang-tr h1[data-lang-tr], body.lang-tr h2[data-lang-tr], body.lang-tr h3[data-lang-tr],
+        body.lang-tr h4[data-lang-tr], body.lang-tr h5[data-lang-tr], body.lang-tr span[data-lang-tr],
+        body.lang-tr strong[data-lang-tr], body.lang-tr td[data-lang-tr], body.lang-tr th[data-lang-tr] { display: inline; }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+    <div class="nav-brand">
+        BBA AI COMPANION
+        <span>v1.0.0</span>
+    </div>
+    <div class="nav-links">
+        <a href="#features"><span data-lang-en>Features</span><span data-lang-tr>Ozellikler</span></a>
+        <a href="#pricing"><span data-lang-en>Pricing</span><span data-lang-tr>Fiyatlar</span></a>
+        <a href="#download"><span data-lang-en>Download</span><span data-lang-tr>Indir</span></a>
+        <a href="#contact"><span data-lang-en>Contact</span><span data-lang-tr>Iletisim</span></a>
+        <button class="lang-toggle" onclick="toggleLang()">TR</button>
+    </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+    <div class="hero-badge">AI-POWERED GROUND CONTROL</div>
+    <h1>BBA AI COMPANION</h1>
+    <div class="tagline">
+        <span data-lang-en>The Intelligent Ground Control Station for Modern Drone Operations</span>
+        <span data-lang-tr>Modern Drone Operasyonlari Icin Akilli Yer Kontrol Istasyonu</span>
+    </div>
+    <div class="sub-tagline">AI Co-Pilot &bull; Object Tracking &bull; Swarm Control &bull; Voice Commands &bull; LiveFlight</div>
+    <div class="hero-buttons">
+        <a href="#download" class="btn btn-primary">
+            <span data-lang-en>Download v1.0.0</span>
+            <span data-lang-tr>v1.0.0 Indir</span>
+        </a>
+        <a href="#pricing" class="btn btn-outline">
+            <span data-lang-en>View Pricing</span>
+            <span data-lang-tr>Fiyatlari Gor</span>
+        </a>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ── FEATURES ── -->
+    <section id="features">
+        <h2 class="section-title">
+            <span data-lang-en>Core Capabilities</span>
+            <span data-lang-tr>Temel Yetenekler</span>
+        </h2>
+        <p class="section-desc">
+            <span data-lang-en>Everything you need to plan, fly, and manage drone operations — powered by artificial intelligence.</span>
+            <span data-lang-tr>Drone operasyonlarini planlamak, ucurmak ve yonetmek icin ihtiyaciniz olan her sey — yapay zeka destekli.</span>
+        </p>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon">&#129504;</div>
+                <h4>AI Co-Pilot</h4>
+                <p>
+                    <span data-lang-en>Proactive AI that monitors your flight in real-time. Automated pre-flight checks, risk alerts, and RTL recommendations.</span>
+                    <span data-lang-tr>Ucusunuzu gercek zamanli izleyen proaktif yapay zeka. Otomatik ucus oncesi kontroller, risk uyarilari ve RTL onerileri.</span>
+                </p>
+                <span class="tag">UNIQUE FEATURE</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#127919;</div>
+                <h4>
+                    <span data-lang-en>AI Object Tracking</span>
+                    <span data-lang-tr>AI Nesne Takibi</span>
+                </h4>
+                <p>
+                    <span data-lang-en>Detect and track 80+ object classes using AI vision. Automatic gimbal control to keep targets centered. Person, vehicle, and custom object tracking.</span>
+                    <span data-lang-tr>AI goruntuleme ile 80+ nesne sinifini tespit edin ve takip edin. Hedefleri merkezde tutmak icin otomatik gimbal kontrolu.</span>
+                </p>
+                <span class="tag tag-blue">COMPUTER VISION</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#129302;</div>
+                <h4>
+                    <span data-lang-en>Swarm Control</span>
+                    <span data-lang-tr>Suru Kontrolu</span>
+                </h4>
+                <p>
+                    <span data-lang-en>Manage 15+ drones simultaneously. Formation control (Line, V-Shape, Circle, Grid), fleet health monitoring, and coordinated missions.</span>
+                    <span data-lang-tr>15+ drone'u ayni anda yonetin. Formasyon kontrolu, filo sagligi izleme ve koordineli gorevler.</span>
+                </p>
+                <span class="tag">MULTI-UAV</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#128506;</div>
+                <h4>
+                    <span data-lang-en>Mission Planning</span>
+                    <span data-lang-tr>Gorev Planlama</span>
+                </h4>
+                <p>
+                    <span data-lang-en>Visual waypoint editor with survey patterns, facade scan, building inspection, and cargo drop templates. AI-assisted optimization.</span>
+                    <span data-lang-tr>Survey desenleri, cephe tarama, bina denetimi ve kargo birakma sablonlari ile gorsel waypoint editoru.</span>
+                </p>
+                <span class="tag tag-blue">AI-ASSISTED</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#128483;&#65039;</div>
+                <h4>
+                    <span data-lang-en>Voice Commands</span>
+                    <span data-lang-tr>Sesli Komutlar</span>
+                </h4>
+                <p>
+                    <span data-lang-en>Control your drone with natural language. "Take off to 50 meters", "Start survey mission" — the AI understands context and intent.</span>
+                    <span data-lang-tr>Drone'unuzu dogal dil ile kontrol edin. "50 metreye kalk", "Tarama gorevini baslat" — AI baglami ve niyeti anlar.</span>
+                </p>
+                <span class="tag tag-green">NATURAL LANGUAGE</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#128225;</div>
+                <h4>LiveFlight Sharing</h4>
+                <p>
+                    <span data-lang-en>Share live telemetry and drone position with team members via web browser. No software installation required for viewers.</span>
+                    <span data-lang-tr>Canli telemetri ve drone konumunu tarayici uzerinden ekip uyelerinizle paylasin. Izleyiciler icin yazilim gerekmez.</span>
+                </p>
+                <span class="tag tag-green">WEB-BASED</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#128737;&#65039;</div>
+                <h4>
+                    <span data-lang-en>Tactical Awareness</span>
+                    <span data-lang-tr>Taktik Farkindalik</span>
+                </h4>
+                <p>
+                    <span data-lang-en>Continuous 5-dimensional risk scoring: battery, navigation, data link, mechanical, and environment. Instant alerts when conditions change.</span>
+                    <span data-lang-tr>Surekli 5 boyutlu risk degerlendirmesi: batarya, navigasyon, veri linki, mekanik ve cevre. Kosullar degistiginde aninda uyari.</span>
+                </p>
+                <span class="tag">REAL-TIME</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#9881;&#65039;</div>
+                <h4>
+                    <span data-lang-en>Parameter Management</span>
+                    <span data-lang-tr>Parametre Yonetimi</span>
+                </h4>
+                <p>
+                    <span data-lang-en>View, search, and modify all vehicle parameters. AI-assisted parameter optimization and safety recommendations.</span>
+                    <span data-lang-tr>Tum arac parametrelerini goruntuleyin, arayin ve degistirin. AI destekli parametre optimizasyonu ve guvenlik onerileri.</span>
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">&#128506;</div>
+                <h4>
+                    <span data-lang-en>3D Map & Weather</span>
+                    <span data-lang-tr>3D Harita ve Hava Durumu</span>
+                </h4>
+                <p>
+                    <span data-lang-en>Real-time 3D terrain view with flight path visualization. Live weather conditions and aviation-grade wind briefing.</span>
+                    <span data-lang-tr>Ucus rotasi gorsellesttirmesi ile gercek zamanli 3D arazi gorunumu. Canli hava durumu ve havacilik sinifi ruzgar brifingleri.</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── AI CO-PILOT HIGHLIGHT ── -->
+    <div class="copilot-section">
+        <h3>
+            <span data-lang-en>AI Co-Pilot — Your Intelligent Flight Partner</span>
+            <span data-lang-tr>AI Co-Pilot — Akilli Ucus Ortaginiz</span>
+        </h3>
+        <div class="copilot-grid">
+            <div class="copilot-item">
+                <div class="bullet">&#x25CF;</div>
+                <div class="text">
+                    <span data-lang-en>The AI actively monitors your flight and <strong>proactively warns you</strong> before problems occur — not after.</span>
+                    <span data-lang-tr>AI ucusunuzu aktif olarak izler ve sorunlar <strong>olmadan once sizi uyarir</strong> — sonra degil.</span>
+                </div>
+            </div>
+            <div class="copilot-item">
+                <div class="bullet">&#x25CF;</div>
+                <div class="text">
+                    <span data-lang-en>Automated safety checks at every critical phase — from <strong>pre-flight to landing</strong>.</span>
+                    <span data-lang-tr><strong>Ucus oncesinden inise</strong> kadar her kritik asamada otomatik guvenlik kontrolleri.</span>
+                </div>
+            </div>
+            <div class="copilot-item">
+                <div class="bullet">&#x25CF;</div>
+                <div class="text">
+                    <span data-lang-en><strong>Predictive analytics</strong> calculate the optimal return-to-home window so you never run out of battery mid-flight.</span>
+                    <span data-lang-tr><strong>Tahmini analiz</strong> ile optimal eve donus penceresi hesaplanir, ucus sirasinda bataryaniz asla bitmez.</span>
+                </div>
+            </div>
+            <div class="copilot-item">
+                <div class="bullet">&#x25CF;</div>
+                <div class="text">
+                    <span data-lang-en>Talk to it, ask questions, give commands — it understands <strong>context and intent</strong>, not just keywords.</span>
+                    <span data-lang-tr>Konusun, sorular sorun, komutlar verin — sadece anahtar kelimeleri degil, <strong>baglami ve niyeti</strong> anlar.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── COMPARISON TABLE ── -->
+    <div class="comparison">
+        <h2 class="section-title" style="margin-bottom: 24px;">
+            <span data-lang-en>How We Compare</span>
+            <span data-lang-tr>Karsilastirma</span>
+        </h2>
+        <table>
+            <thead><tr>
+                <th><span data-lang-en>Feature</span><span data-lang-tr>Ozellik</span></th>
+                <th>QGroundControl</th>
+                <th>Mission Planner</th>
+                <th style="color:#ffd700;">BBA AI Companion</th>
+            </tr></thead>
+            <tbody>
+                <tr><td>AI Flight Assistant</td><td><span class="cross">&#10005;</span></td><td><span class="cross">&#10005;</span></td><td><span class="check">&#10003;</span> Full AI Co-Pilot</td></tr>
+                <tr><td>Proactive Risk Alerts</td><td><span class="cross">&#10005;</span></td><td><span class="cross">&#10005;</span></td><td><span class="check">&#10003;</span> Real-time TAE</td></tr>
+                <tr><td>Voice Commands</td><td><span class="cross">&#10005;</span></td><td><span class="cross">&#10005;</span></td><td><span class="check">&#10003;</span> Natural Language</td></tr>
+                <tr><td>AI Object Tracking</td><td><span class="cross">&#10005;</span></td><td><span class="cross">&#10005;</span></td><td><span class="check">&#10003;</span> 80+ Classes</td></tr>
+                <tr><td>Swarm Control</td><td><span class="cross">&#10005;</span></td><td><span class="cross">&#10005;</span></td><td><span class="check">&#10003;</span> 15+ Drones</td></tr>
+                <tr><td>LiveFlight Web Sharing</td><td><span class="cross">&#10005;</span></td><td><span class="cross">&#10005;</span></td><td><span class="check">&#10003;</span> Browser-based</td></tr>
+                <tr><td>Pre-Flight Safety Check</td><td><span class="partial">&#9679;</span> Basic</td><td><span class="partial">&#9679;</span> Basic</td><td><span class="check">&#10003;</span> AI-powered</td></tr>
+                <tr><td>Mission Planning</td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span> AI-assisted</td></tr>
+                <tr><td>Telemetry & Control</td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td></tr>
+                <tr><td>Open Source</td><td><span class="check">&#10003;</span></td><td><span class="check">&#10003;</span></td><td><span class="cross">&#10005;</span> Commercial</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ── PRICING ── -->
+    <section id="pricing">
+        <h2 class="section-title">
+            <span data-lang-en>Simple, Transparent Pricing</span>
+            <span data-lang-tr>Basit, Seffaf Fiyatlandirma</span>
+        </h2>
+        <p class="section-desc">
+            <span data-lang-en>Start small, scale as you grow. All plans include core GCS features, telemetry, and mission planning.</span>
+            <span data-lang-tr>Kucuk baslayin, buyudukce olceklendirin. Tum planlar temel GCS ozellikleri, telemetri ve gorev planlamasi icerir.</span>
+        </p>
+
+        <div class="pricing-grid">
+            <div class="price-card">
+                <h4>Starter</h4>
+                <div class="price">$9<span>/mo</span></div>
+                <div class="desc">
+                    <span data-lang-en>For students & hobbyists</span>
+                    <span data-lang-tr>Ogrenciler ve hobiciler icin</span>
+                </div>
+                <ul>
+                    <li><span data-lang-en>50 AI messages / month</span><span data-lang-tr>Aylik 50 AI mesaj</span></li>
+                    <li><span data-lang-en>1 LiveFlight connection</span><span data-lang-tr>1 LiveFlight baglantisi</span></li>
+                    <li><span data-lang-en>Full telemetry & control</span><span data-lang-tr>Tam telemetri ve kontrol</span></li>
+                    <li><span data-lang-en>Mission planning</span><span data-lang-tr>Gorev planlama</span></li>
+                    <li><span data-lang-en>Community support</span><span data-lang-tr>Topluluk destegi</span></li>
+                </ul>
+                <a href="mailto:info@bbavtol.com?subject=Starter Plan" class="btn btn-outline" style="font-size:0.85rem;padding:10px 24px;">
+                    <span data-lang-en>Get Started</span><span data-lang-tr>Basla</span>
+                </a>
+            </div>
+
+            <div class="price-card featured" data-badge="MOST POPULAR">
+                <h4>Pro</h4>
+                <div class="price">$79<span>/mo</span></div>
+                <div class="desc">
+                    <span data-lang-en>For professional operators</span>
+                    <span data-lang-tr>Profesyonel operatorler icin</span>
+                </div>
+                <ul>
+                    <li><span data-lang-en>300 AI messages / month</span><span data-lang-tr>Aylik 300 AI mesaj</span></li>
+                    <li><span data-lang-en>5 LiveFlight connections</span><span data-lang-tr>5 LiveFlight baglantisi</span></li>
+                    <li><span data-lang-en>Object tracking (80+ classes)</span><span data-lang-tr>Nesne takibi (80+ sinif)</span></li>
+                    <li><span data-lang-en>Voice commands</span><span data-lang-tr>Sesli komutlar</span></li>
+                    <li><span data-lang-en>$0.05/msg overage</span><span data-lang-tr>Asim: $0.05/mesaj</span></li>
+                    <li><span data-lang-en>Email support</span><span data-lang-tr>E-posta destegi</span></li>
+                </ul>
+                <a href="mailto:info@bbavtol.com?subject=Pro Plan" class="btn btn-primary" style="font-size:0.85rem;padding:10px 24px;">
+                    <span data-lang-en>Get Pro</span><span data-lang-tr>Pro Al</span>
+                </a>
+            </div>
+
+            <div class="price-card">
+                <h4>Business</h4>
+                <div class="price">$199<span>/mo</span></div>
+                <div class="desc">
+                    <span data-lang-en>For enterprise & fleets</span>
+                    <span data-lang-tr>Kurumsal ve filolar icin</span>
+                </div>
+                <ul>
+                    <li><span data-lang-en>1,500 AI messages / month</span><span data-lang-tr>Aylik 1.500 AI mesaj</span></li>
+                    <li><span data-lang-en>Unlimited LiveFlight</span><span data-lang-tr>Sinirsiz LiveFlight</span></li>
+                    <li><span data-lang-en>Swarm control (15+ drones)</span><span data-lang-tr>Suru kontrolu (15+ drone)</span></li>
+                    <li><span data-lang-en>$0.03/msg overage</span><span data-lang-tr>Asim: $0.03/mesaj</span></li>
+                    <li><span data-lang-en>Priority support</span><span data-lang-tr>Oncelikli destek</span></li>
+                    <li><span data-lang-en>Custom integrations</span><span data-lang-tr>Ozel entegrasyonlar</span></li>
+                </ul>
+                <a href="mailto:info@bbavtol.com?subject=Business Plan" class="btn btn-outline" style="font-size:0.85rem;padding:10px 24px;">
+                    <span data-lang-en>Contact Sales</span><span data-lang-tr>Satisla Iletisim</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── DOWNLOAD ── -->
+    <section id="download">
+        <div class="download-section">
+            <h3>
+                <span data-lang-en>Download BBA AI Companion</span>
+                <span data-lang-tr>BBA AI Companion Indir</span>
+            </h3>
+            <div class="version-tag">v1.0.0 — Latest Release</div>
+
+            <div class="download-buttons">
+                <a href="https://github.com/serdarbba/bba-website/releases/download/v1.0.0/BBA-AI-Companion-Windows.zip" class="dl-btn">
+                    <div class="dl-icon">&#128187;</div>
+                    <div class="dl-info">
+                        <strong>Windows</strong>
+                        <span>BBA-AI-Companion-Windows.zip</span>
+                    </div>
+                </a>
+                <a href="https://github.com/serdarbba/bba-website/releases/download/v1.0.0/BBA-AI-Companion-Linux.tar.gz" class="dl-btn">
+                    <div class="dl-icon">&#128039;</div>
+                    <div class="dl-info">
+                        <strong>Linux</strong>
+                        <span>BBA-AI-Companion-Linux.tar.gz</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="install-steps">
+                <strong style="color:#fff;">
+                    <span data-lang-en>Quick Start:</span>
+                    <span data-lang-tr>Hizli Baslangic:</span>
+                </strong><br>
+                <span data-lang-en>
+                    <strong>Windows:</strong> Extract the zip &rarr; Run <code>BBA-AI-Companion.exe</code><br>
+                    <strong>Linux:</strong> Extract &rarr; Run <code>./BBA-AI-Companion</code><br><br>
+                    First launch will ask for your license key (format: <code>BBA-XXXX-XXXX-XXXX</code>).
+                    Contact us to get your key.
+                </span>
+                <span data-lang-tr>
+                    <strong>Windows:</strong> Zip'i cikartin &rarr; <code>BBA-AI-Companion.exe</code> dosyasini calistirin<br>
+                    <strong>Linux:</strong> Arsivi cikartin &rarr; <code>./BBA-AI-Companion</code> calistirin<br><br>
+                    Ilk acilista lisans anahtariniz sorulacaktir (format: <code>BBA-XXXX-XXXX-XXXX</code>).
+                    Anahtariniz icin bizimle iletisime gecin.
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── USE CASES ── -->
+    <h2 class="section-title">
+        <span data-lang-en>Built For Real Operations</span>
+        <span data-lang-tr>Gercek Operasyonlar Icin Tasarlandi</span>
+    </h2>
+    <p class="section-desc">
+        <span data-lang-en>From agricultural surveys to security patrols — BBA AI Companion adapts to your mission.</span>
+        <span data-lang-tr>Tarimsal taramalardan guvenlik devriyelerine — BBA AI Companion gorevinize uyum saglar.</span>
+    </p>
+    <div class="usecases">
+        <div class="usecase">
+            <div class="icon">&#127806;</div>
+            <h5><span data-lang-en>Agriculture</span><span data-lang-tr>Tarim</span></h5>
+            <p><span data-lang-en>Automated survey missions over fields. AI monitors coverage and suggests optimal flight patterns.</span><span data-lang-tr>Tarlalar uzerinde otomatik tarama gorevleri. AI kapsami izler ve optimal ucus desenleri onerir.</span></p>
+        </div>
+        <div class="usecase">
+            <div class="icon">&#127959;&#65039;</div>
+            <h5><span data-lang-en>Infrastructure</span><span data-lang-tr>Altyapi</span></h5>
+            <p><span data-lang-en>Bridge, tower, and pipeline inspection with AI-guided camera control and anomaly detection.</span><span data-lang-tr>AI destekli kamera kontrolu ve anomali tespiti ile kopru, kule ve boru hatti denetimi.</span></p>
+        </div>
+        <div class="usecase">
+            <div class="icon">&#128274;</div>
+            <h5><span data-lang-en>Security</span><span data-lang-tr>Guvenlik</span></h5>
+            <p><span data-lang-en>Perimeter patrol with AI object tracking. Automatic alerts when vehicles or people are detected.</span><span data-lang-tr>AI nesne takibi ile cevre devriyesi. Arac veya kisi tespit edildiginde otomatik uyari.</span></p>
+        </div>
+        <div class="usecase">
+            <div class="icon">&#128506;&#65039;</div>
+            <h5><span data-lang-en>Mapping & Survey</span><span data-lang-tr>Haritalama</span></h5>
+            <p><span data-lang-en>Survey pattern generation, geofence validation, and mission optimization for aerial mapping.</span><span data-lang-tr>Hava haritaciligi icin tarama deseni olusturma, geofence dogrulama ve gorev optimizasyonu.</span></p>
+        </div>
+    </div>
+
+    <!-- ── COMPATIBILITY ── -->
+    <div class="compat-banner">
+        <div>
+            <h4><span data-lang-en>Universal Compatibility</span><span data-lang-tr>Evrensel Uyumluluk</span></h4>
+            <p><span data-lang-en>Works with any MAVLink-compatible autopilot. Connect via serial, UDP, or TCP.</span><span data-lang-tr>Herhangi bir MAVLink uyumlu otopilot ile calisir. Seri, UDP veya TCP ile baglanin.</span></p>
+        </div>
+        <div class="compat-tags">
+            <span class="compat-tag">ArduPilot</span>
+            <span class="compat-tag">PX4</span>
+            <span class="compat-tag">MAVLink 2.0</span>
+            <span class="compat-tag">Windows / Linux</span>
+        </div>
+    </div>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="footer" id="contact">
+    <h3>
+        <span data-lang-en>Ready to Upgrade Your Drone Operations?</span>
+        <span data-lang-tr>Drone Operasyonlarinizi Yukseltmeye Hazir Misiniz?</span>
+    </h3>
+    <p>
+        <span data-lang-en>Get priority access to new features, direct input on the roadmap, and a competitive edge.</span>
+        <span data-lang-tr>Yeni ozelliklere oncelikli erisim, yol haritasina dogrudan katki ve rekabet avantaji elde edin.</span>
+    </p>
+    <a href="mailto:info@bbavtol.com" class="email-btn">info@bbavtol.com</a>
+    <p style="margin-top:12px;color:#c9d1d9;font-size:0.92rem;">+90 534 431 87 34 &bull; Izmir, Turkey</p>
+    <p class="small">&copy; 2026 BBA Teknoloji. All rights reserved.</p>
+</footer>
+
+<script>
+function toggleLang() {
+    document.body.classList.toggle('lang-tr');
+    const btn = document.querySelector('.lang-toggle');
+    btn.textContent = document.body.classList.contains('lang-tr') ? 'EN' : 'TR';
+}
+</script>
+</body>
+</html>
